@@ -3,7 +3,7 @@ dist/
 .next/
 .env
 .env.*
-!.env.example
+.env.local
+.env.example
 *.tsbuildinfo
 .DS_Store
-
