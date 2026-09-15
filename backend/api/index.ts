@@ -1,5 +1,5 @@
-import app from "../src/app";
-import { connectDatabase } from "../src/config/database";
+import app from "../dist/app.js";
+import { connectDatabase } from "../dist/config/database.js";
 
 let databaseReady: Promise<void> | undefined;
 
