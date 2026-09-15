@@ -38,7 +38,7 @@ export default function AuthForm({ onLogin }: { onLogin: (user: AuthUser) => voi
         {signup && <label className="block text-sm">Name<input required maxLength={80} autoComplete="name" value={name} onChange={e => setName(e.target.value)} className="mt-1 w-full rounded border p-3" /></label>}
         <label className="block text-sm">Email<input required type="email" maxLength={254} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} className="mt-1 w-full rounded border p-3" /></label>
         <label className="block text-sm">Password<input required type="password" minLength={12} maxLength={128} autoComplete={signup ? "new-password" : "current-password"} value={password} onChange={e => setPassword(e.target.value)} className="mt-1 w-full rounded border p-3" />{signup && <span className="text-xs text-slate-500">Use 12–128 characters.</span>}</label>
-        {message && <p role="status" className="text-sm text-indigo-700">{message}</p>}
+        {message && <p role="alert" aria-live="polite" className="text-sm text-indigo-700">{message}</p>}
         <button disabled={busy} className="w-full rounded bg-indigo-600 p-3 font-semibold text-white disabled:opacity-50">{busy ? "Please wait…" : signup ? "Sign up" : "Log in"}</button>
         <button type="button" disabled={busy} onClick={() => { setSignup(!signup); setMessage(""); setPassword(""); }} className="w-full text-sm text-indigo-700">{signup ? "Already have an account? Log in" : "New here? Sign up"}</button>
       </form>
