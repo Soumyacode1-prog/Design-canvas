@@ -2,7 +2,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 let refreshInFlight: Promise<Response> | null = null;
 
 export function authRequest(path: string, init: RequestInit = {}) {
-  return fetch(`${API_URL}${path}`, { ...init, credentials: "include", cache: "no-store" });
+  const headers = new Headers(init.headers);
+  headers.set("Accept", "application/json");
+  return fetch(`${API_URL}${path}`, { ...init, headers, credentials: "include", cache: "no-store" });
 }
 
 async function refreshSession() {
