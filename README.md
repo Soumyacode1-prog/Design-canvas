@@ -33,7 +33,13 @@ Set `MONGODB_URI` to your connection string. The backend explicitly uses the `ca
 
 Open http://localhost:3000, create an account, then log in. The browser sends HttpOnly cookies automatically; tokens are never stored in localStorage. Use HTTPS and `NODE_ENV=production` in deployment.
 
+
+Deployed URL now serves both frontend and backend properly:
+ 
+    https://frontend-nu-flax-71.vercel.app
+    
 ** LOGIN CREDENTIALS: **
+
 EMAIL : shambhavisoumya4@gmail.com
 PASSWORD : HELLOWORLD123
 
