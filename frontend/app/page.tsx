@@ -165,7 +165,6 @@
       if (!stage) return;
 
       try {
-        // Commit the selection change before capturing the canvas.
         flushSync(() => setSelectedId(null));
         stage.draw();
 

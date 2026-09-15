@@ -6,7 +6,6 @@ export function authRequest(path: string, init: RequestInit = {}) {
 }
 
 async function refreshSession() {
-  // Web Locks serialize refreshes across tabs without storing any token in JS.
   const refresh = async () => {
     const current = await authRequest("/auth/me");
     return current.ok ? current : authRequest("/auth/refresh", { method: "POST" });

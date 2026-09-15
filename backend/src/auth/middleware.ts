@@ -12,7 +12,6 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
   } catch (error) { next(error); }
 };
 
-// SameSite cookies plus an exact Origin check protect cookie-authenticated writes.
 export const checkOrigin: RequestHandler = (req, res, next) => {
   if (!["GET", "HEAD", "OPTIONS"].includes(req.method) && req.get("origin") !== (process.env.CLIENT_URL || "http://localhost:3000")) {
     res.status(403).json({ message: "Request origin is not allowed." }); return;

@@ -16,7 +16,6 @@ router.post("/signup", limitAuthAttempts, async (req, res, next) => {
     if (!parsed.success) { res.status(400).json({ message: "Enter a name, valid email, and a password of 12–128 characters." }); return; }
     const { name, email, password } = parsed.data;
     const user = await User.create({ name, email, passwordHash: await hashPassword(password) });
-    // Signup does not create a session; the user logs in after registration.
     res.status(201).json({ user: publicUser(user) });
   } catch (error) {
     if ((error as { code?: number }).code === 11000) { res.status(409).json({ message: "Unable to create account with this email. Try logging in." }); return; }
@@ -29,7 +28,6 @@ router.post("/login", limitAuthAttempts, async (req, res, next) => {
     const parsed = credentials.safeParse(req.body);
     if (!parsed.success) { res.status(401).json({ message: "Invalid email or password." }); return; }
     const user = await User.findOne({ email: parsed.data.email }).select("+passwordHash");
-    // Perform the same expensive hash even when the email does not exist.
     const valid = await verifyPassword(parsed.data.password, user?.passwordHash || `${"0".repeat(32)}:${"0".repeat(128)}`);
     if (!user || !valid) { res.status(401).json({ message: "Invalid email or password." }); return; }
     const access = newToken(), refresh = newToken();
@@ -45,14 +43,12 @@ router.post("/refresh", async (req, res, next) => {
     const token = readCookie(req, "refresh_token");
     if (!token) { clearTokens(res); res.status(401).json({ message: "Please log in again." }); return; }
     const oldHash = hashToken(token), access = newToken(), refresh = newToken();
-    // Compare-and-swap: only one request can consume the old refresh token.
     const session = await Session.findOneAndUpdate(
       { refreshHash: oldHash, revoked: false, expiresAt: { $gt: new Date() } },
       { $set: { refreshHash: hashToken(refresh), accessHash: hashToken(access), accessExpiresAt: new Date(Date.now() + ACCESS_MS) }, $push: { usedRefreshHashes: oldHash } },
       { returnDocument: "after" },
     );
     if (!session) {
-      // A previously consumed token means possible theft: revoke its entire session.
       await Session.updateMany({ usedRefreshHashes: oldHash, revoked: false }, { $set: { revoked: true } });
       clearTokens(res); res.status(401).json({ message: "Session expired. Please log in again." }); return;
     }
