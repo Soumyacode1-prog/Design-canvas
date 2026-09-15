@@ -49,6 +49,8 @@ The `canvas` database contains `users`, `sessions`, and `canvases`. Passwords an
 
 ## Validation
 
+The implementation is organized as a sequence of concerns: the editor manages a local scene, the API validates and persists that scene, authentication establishes the account session, and owner filters isolate each user's canvases.
+
 ```bash
 cd backend && npm test
 cd frontend && npm run lint && npm run build -- --webpack
